@@ -13,6 +13,8 @@ export type SiteConfig = {
   maps_url: string;
   hours_text: string;
   donation_text: string;
+  /** Beneficios, uno por línea (separados por saltos de línea). */
+  benefits: string;
 };
 
 /** Valores por defecto (coinciden con el schema.sql) por si aún no hay fila. */
@@ -29,6 +31,7 @@ export const DEFAULT_CONFIG: SiteConfig = {
   hours_text: "Lunes a sábado, 9:00 a 18:00 hrs.",
   donation_text:
     "El registro es totalmente gratuito. La aportación es voluntaria (10, 15 o 20 MXN) por el uso del equipo e internet, nunca por el registro.",
+  benefits: "Proceso rápido\nSin filas\nAtención personalizada\nComprobante de registro",
 };
 
 /**
@@ -61,6 +64,7 @@ export async function getConfig(): Promise<SiteConfig> {
       maps_url: data.maps_url ?? DEFAULT_CONFIG.maps_url,
       hours_text: data.hours_text ?? DEFAULT_CONFIG.hours_text,
       donation_text: data.donation_text ?? DEFAULT_CONFIG.donation_text,
+      benefits: data.benefits ?? DEFAULT_CONFIG.benefits,
     };
   } catch {
     return DEFAULT_CONFIG;

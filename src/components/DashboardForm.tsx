@@ -38,6 +38,7 @@ export default function DashboardForm({ initialConfig, userEmail }: Props) {
     maps_url: initialConfig.maps_url,
     hours_text: initialConfig.hours_text,
     donation_text: initialConfig.donation_text,
+    benefits: initialConfig.benefits,
   });
   const [localDateTime, setLocalDateTime] = useState(initialLocal);
   const [timezone, setTimezone] = useState(initialConfig.countdown_timezone);
@@ -249,6 +250,21 @@ export default function DashboardForm({ initialConfig, userEmail }: Props) {
           />
         </Section>
 
+        {/* Beneficios */}
+        <Section
+          title="Beneficios"
+          subtitle="Escribe un beneficio por línea. Cada línea aparece como un punto con palomita en la página."
+          delay="0.2s"
+        >
+          <TextareaField
+            label="Beneficios (uno por línea)"
+            value={form.benefits}
+            onChange={(v) => set("benefits", v)}
+            placeholder={"Proceso rápido\nSin filas\nAtención personalizada\nComprobante de registro"}
+            rows={6}
+          />
+        </Section>
+
         {/* Costo */}
         <Section
           title="Aviso de costo / aportación"
@@ -348,11 +364,13 @@ function TextareaField({
   value,
   onChange,
   placeholder,
+  rows = 3,
 }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
   placeholder?: string;
+  rows?: number;
 }) {
   return (
     <div className="flex flex-col gap-2">
@@ -361,7 +379,7 @@ function TextareaField({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        rows={3}
+        rows={rows}
         className="glass-input resize-none px-4 py-3 text-sm leading-relaxed"
       />
     </div>

@@ -22,69 +22,80 @@ export default async function Home() {
   })();
 
   return (
-    <main className="relative mx-auto w-full max-w-5xl px-5 pb-24 pt-10 sm:px-8 sm:pt-16">
-      {/* ===== Encabezado ===== */}
-      <header className="animate-fade-up flex items-center justify-between">
-        <div className="flex items-center gap-2.5">
-          <ShieldIcon className="h-6 w-6 text-sky-glow" />
-          <span className="font-display text-sm font-semibold tracking-tight text-ink/80">
-            Registro Celular
-          </span>
-        </div>
-        <span className="glass-soft hidden rounded-full px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-ink/65 sm:inline-block">
-          De acuerdo a la ley en México
-        </span>
-      </header>
-
-      {/* ===== Hero ===== */}
-      <section className="relative mt-16 text-center sm:mt-24">
-        {/* Firma visual: aura de escudo detrás del título */}
+    <main className="relative mx-auto w-full max-w-5xl px-5 pb-24 sm:px-8">
+      {/* ===== Banner con imagen de fondo (header + hero) ===== */}
+      <div className="relative isolate">
+        {/* Imagen de fondo a ancho completo + degradado para legibilidad */}
         <div
           aria-hidden
-          className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[460px] w-[460px] -translate-x-1/2 -translate-y-[55%] animate-glow-pulse rounded-full bg-sky-glow/20 blur-[120px]"
-        />
-        <div
-          aria-hidden
-          className="pointer-events-none absolute left-1/2 top-0 -z-10 -translate-x-1/2 opacity-30"
+          className="pointer-events-none absolute left-1/2 top-0 -z-10 h-full w-screen -translate-x-1/2 overflow-hidden"
         >
-          <ShieldIcon className="h-40 w-40 text-sky-glow/30" />
-        </div>
-
-        <p
-          className="animate-fade-up text-sm font-semibold uppercase tracking-[0.3em] text-sky-glow/80"
-          style={{ animationDelay: "0.05s" }}
-        >
-          {config.hero_subtitle}
-        </p>
-        <h1
-          className="animate-fade-up text-gradient mt-5 font-display text-5xl font-extrabold leading-[1.02] tracking-tight sm:text-7xl md:text-8xl"
-          style={{ animationDelay: "0.12s" }}
-        >
-          {config.hero_title}
-        </h1>
-        <p
-          className="animate-fade-up mx-auto mt-7 max-w-2xl text-base leading-relaxed text-ink/65 sm:text-lg"
-          style={{ animationDelay: "0.2s" }}
-        >
-          {config.hero_note}
-        </p>
-
-        {/* Badge de fecha límite con efecto sheen */}
-        {deadlineDate && (
           <div
-            className="animate-fade-up sheen-wrap glass mx-auto mt-10 inline-flex items-center gap-3 rounded-2xl px-5 py-3"
-            style={{ animationDelay: "0.28s" }}
-          >
-            <AlertIcon className="h-5 w-5 shrink-0 text-amber-400" />
-            <span className="text-sm font-semibold text-ink/70 sm:text-base">
-              Fecha límite:{" "}
-              <span className="text-gradient-gold font-bold">
-                {deadlineDate}
+            className="absolute inset-0 bg-cover bg-center"
+            style={{ backgroundImage: "url(/header-bg.jpg)" }}
+          />
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(180deg, rgba(6,9,20,0.55) 0%, rgba(6,9,20,0.80) 55%, #060914 100%)",
+            }}
+          />
+        </div>
+
+        <div className="pt-10 sm:pt-16">
+          {/* Encabezado */}
+          <header className="animate-fade-up flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <ShieldIcon className="h-6 w-6 text-sky-glow" />
+              <span className="font-display text-sm font-semibold tracking-tight text-ink/80">
+                Registro Celular
               </span>
+            </div>
+            <span className="glass-soft hidden rounded-full px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-ink/65 sm:inline-block">
+              De acuerdo a la ley en México
             </span>
-          </div>
-        )}
-      </section>
+          </header>
+
+          {/* Hero */}
+          <section className="relative mt-16 pb-4 text-center sm:mt-24">
+            <p
+              className="animate-fade-up text-sm font-semibold uppercase tracking-[0.3em] text-sky-glow/90"
+              style={{ animationDelay: "0.05s" }}
+            >
+              {config.hero_subtitle}
+            </p>
+            <h1
+              className="animate-fade-up text-gradient mt-5 font-display text-5xl font-extrabold leading-[1.02] tracking-tight drop-shadow-[0_2px_24px_rgba(0,0,0,0.55)] sm:text-7xl md:text-8xl"
+              style={{ animationDelay: "0.12s" }}
+            >
+              {config.hero_title}
+            </h1>
+            <p
+              className="animate-fade-up mx-auto mt-7 max-w-2xl text-base leading-relaxed text-ink/80 sm:text-lg"
+              style={{ animationDelay: "0.2s" }}
+            >
+              {config.hero_note}
+            </p>
+
+            {/* Badge de fecha límite con efecto sheen */}
+            {deadlineDate && (
+              <div
+                className="animate-fade-up sheen-wrap glass mx-auto mt-10 inline-flex items-center gap-3 rounded-2xl px-5 py-3"
+                style={{ animationDelay: "0.28s" }}
+              >
+                <AlertIcon className="h-5 w-5 shrink-0 text-amber-400" />
+                <span className="text-sm font-semibold text-ink/75 sm:text-base">
+                  Fecha límite:{" "}
+                  <span className="text-gradient-gold font-bold">
+                    {deadlineDate}
+                  </span>
+                </span>
+              </div>
+            )}
+          </section>
+        </div>
+      </div>
 
       {/* ===== Contador ===== */}
       <section
@@ -142,10 +153,15 @@ export default async function Home() {
           icon={<ShieldCheckIcon className="h-6 w-6" />}
           title="Beneficios"
         >
-          <Item accent="emerald">Proceso rápido</Item>
-          <Item accent="emerald">Sin filas</Item>
-          <Item accent="emerald">Atención personalizada</Item>
-          <Item accent="emerald">Comprobante de registro</Item>
+          {config.benefits
+            .split("\n")
+            .map((line) => line.trim())
+            .filter((line) => line.length > 0)
+            .map((line, i) => (
+              <Item key={i} accent="emerald">
+                {line}
+              </Item>
+            ))}
         </InfoCard>
 
         <InfoCard
@@ -258,8 +274,8 @@ export default async function Home() {
         <div className="glass-soft flex items-center gap-3 rounded-2xl px-5 py-3">
           <LockIcon className="h-5 w-5 text-sky-glow" />
           <p className="text-sm text-ink/65">
-            El registro se {" "}
-            <span className="font-semibold text-ink/85">realiza</span>, desde tu
+            El registro lo realizas{" "}
+            <span className="font-semibold text-ink/85">tú</span>, desde tu
             teléfono, ante tu compañía. No almacenamos tus datos.
           </p>
         </div>

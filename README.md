@@ -147,10 +147,24 @@ registro-celular/
 
 - **Compañías mostradas:** edita el arreglo `OPERATORS` al inicio de
   `src/app/page.tsx`.
-- **Requisitos / Beneficios:** son texto fijo (claro y bonito) dentro de
-  `src/app/page.tsx`, en las tarjetas `InfoCard`. Cámbialos a tu gusto.
+- **Beneficios:** ahora se editan **desde el panel** (uno por línea). Ya no
+  necesitas tocar código.
+- **Requisitos:** son texto fijo dentro de `src/app/page.tsx`, en la tarjeta
+  `InfoCard` de "Requisitos". Cámbialos a tu gusto.
+- **Imagen del header:** reemplaza el archivo `public/header-bg.jpg` por la tuya
+  (mismo nombre). Recomendado: JPG, máx. 1600 px de ancho y bajo peso para que
+  cargue rápido en móviles.
 - **Colores:** están en `tailwind.config.ts` y en `src/app/globals.css`
   (busca `--font` y los colores `void`, `panel`, `sky-glow`, `ink`).
+
+---
+
+## 🔄 ¿Ya tenías el proyecto desplegado?
+
+Si ya habías creado la base de datos antes de esta versión, corre **una vez** el
+archivo `supabase/migration_beneficios.sql` en *Supabase > SQL Editor* para
+agregar la columna de Beneficios. (Si es una instalación nueva con `schema.sql`,
+ya viene incluida y no necesitas hacer nada.)
 
 ---
 

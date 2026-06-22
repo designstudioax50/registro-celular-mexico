@@ -14,6 +14,7 @@ export type ConfigPayload = {
   maps_url: string;
   hours_text: string;
   donation_text: string;
+  benefits: string;
 };
 
 export async function updateConfig(
@@ -47,6 +48,7 @@ export async function updateConfig(
       maps_url: payload.maps_url.trim(),
       hours_text: payload.hours_text.trim(),
       donation_text: payload.donation_text.trim(),
+      benefits: payload.benefits.replace(/\r\n/g, "\n").trim(),
       updated_at: new Date().toISOString(),
     })
     .eq("id", 1);
