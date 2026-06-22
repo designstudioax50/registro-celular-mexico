@@ -274,8 +274,8 @@ export default async function Home() {
         <div className="glass-soft flex items-center gap-3 rounded-2xl px-5 py-3">
           <LockIcon className="h-5 w-5 text-sky-glow" />
           <p className="text-sm text-ink/65">
-            El registro lo realizas{" "}
-            <span className="font-semibold text-ink/85">tú</span>, desde tu
+            El registro se{" "}
+            <span className="font-semibold text-ink/85">realiza</span>, desde tu
             teléfono, ante tu compañía. No almacenamos tus datos.
           </p>
         </div>
