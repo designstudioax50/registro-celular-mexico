@@ -1,7 +1,7 @@
 # 📱 Registro Celular — Página + Panel de administración
 
 Página web cinematográfica (glassmorphism) para tu servicio de apoyo en el
-**Registro Celular Obligatorio**, con un **contador regresivo configurable**,
+**Registro Celular Obligatorio**, con 8 contadores configurables por terminación de número,
 **botón de ubicación a Google Maps**, **generador de código QR** y un
 **panel de administración protegido con contraseña** para editar todo sin tocar
 código.
@@ -14,7 +14,7 @@ en **Vercel**.
 ## ✨ Lo que puedes configurar desde el panel
 
 - Título principal, subtítulo y mensaje de bienvenida
-- Fecha, hora **y zona horaria** del contador regresivo
+- Los 8 contadores por terminación de número (fecha, hora y zona horaria compartida)
 - Dirección + enlace de Google Maps (botón "Cómo llegar")
 - Horarios de atención
 - Texto del aviso de aportación voluntaria
@@ -86,7 +86,7 @@ En Supabase ve a **Project Settings → API** y copia:
 ### 4) Configura tu página desde el panel
 
 1. Entra a `/login` con el correo y contraseña que creaste en Supabase.
-2. Ajusta el título, el contador (fecha + hora + zona horaria), tu dirección,
+2. Ajusta el título, los 8 contadores (fecha + hora de cada terminación, con zona horaria compartida), tu dirección,
    horarios y el aviso de aportación.
 3. Pega tu **enlace de Google Maps** (ver abajo) y guarda.
 4. Descarga tu **código QR** y úsalo en tus carteles impresos.
@@ -161,10 +161,11 @@ registro-celular/
 
 ## 🔄 ¿Ya tenías el proyecto desplegado?
 
-Si ya habías creado la base de datos antes de esta versión, corre **una vez** el
-archivo `supabase/migration_beneficios.sql` en *Supabase > SQL Editor* para
-agregar la columna de Beneficios. (Si es una instalación nueva con `schema.sql`,
-ya viene incluida y no necesitas hacer nada.)
+Si ya tenías la base de datos creada, corre **una vez** el archivo
+`supabase/migration.sql` en *Supabase > SQL Editor*. Agrega (de forma segura) la
+columna de Beneficios y los 8 contadores por terminación. Es seguro correrlo
+aunque ya hayas aplicado migraciones antes. (Si es instalación nueva con
+`schema.sql`, ya viene todo incluido.)
 
 ---
 

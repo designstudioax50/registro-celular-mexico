@@ -1,5 +1,4 @@
-import { DateTime } from "luxon";
-import Countdown from "@/components/Countdown";
+import Deadlines from "@/components/Deadlines";
 import { getConfig, buildMapsHref } from "@/lib/config";
 
 export const dynamic = "force-dynamic";
@@ -9,17 +8,6 @@ const OPERATORS = ["Telcel", "AT&T", "Movistar", "Bait", "Unefon"];
 export default async function Home() {
   const config = await getConfig();
   const mapsHref = buildMapsHref(config);
-
-  const deadlineDate = (() => {
-    try {
-      return DateTime.fromMillis(new Date(config.countdown_target).getTime())
-        .setZone(config.countdown_timezone)
-        .setLocale("es")
-        .toFormat("d 'de' LLLL 'de' yyyy");
-    } catch {
-      return "";
-    }
-  })();
 
   return (
     <main className="relative mx-auto w-full max-w-5xl px-5 pb-24 sm:px-8">
@@ -78,32 +66,41 @@ export default async function Home() {
               {config.hero_note}
             </p>
 
-            {/* Badge de fecha límite con efecto sheen */}
-            {deadlineDate && (
-              <div
-                className="animate-fade-up sheen-wrap glass mx-auto mt-10 inline-flex items-center gap-3 rounded-2xl px-5 py-3"
-                style={{ animationDelay: "0.28s" }}
-              >
-                <AlertIcon className="h-5 w-5 shrink-0 text-amber-400" />
-                <span className="text-sm font-semibold text-ink/75 sm:text-base">
-                  Fecha límite:{" "}
-                  <span className="text-gradient-gold font-bold">
-                    {deadlineDate}
-                  </span>
-                </span>
-              </div>
-            )}
+            {/* Badge instructivo con efecto sheen */}
+            <div
+              className="animate-fade-up sheen-wrap glass mx-auto mt-10 inline-flex items-center gap-3 rounded-2xl px-5 py-3"
+              style={{ animationDelay: "0.28s" }}
+            >
+              <AlertIcon className="h-5 w-5 shrink-0 text-amber-400" />
+              <span className="text-sm font-semibold text-ink/80 sm:text-base">
+                Tu fecha límite depende del{" "}
+                <span className="text-gradient-gold font-bold">
+                  último dígito
+                </span>{" "}
+                de tu número
+              </span>
+            </div>
           </section>
         </div>
       </div>
 
       {/* ===== Contador ===== */}
+      {/* ===== Contadores por terminación ===== */}
       <section
         className="animate-fade-up mt-16 sm:mt-20"
         style={{ animationDelay: "0.34s" }}
       >
-        <Countdown
-          targetISO={config.countdown_target}
+        <div className="mb-8 text-center">
+          <h2 className="font-display text-3xl font-bold tracking-tight text-ink sm:text-4xl">
+            ¿Cuándo te toca registrarte?
+          </h2>
+          <p className="mx-auto mt-3 max-w-2xl text-sm text-ink/60 sm:text-base">
+            Revisa el <span className="font-semibold text-ink/80">último
+            dígito</span> de tu número de teléfono y busca tu fecha límite.
+          </p>
+        </div>
+        <Deadlines
+          deadlines={config.deadlines}
           timezone={config.countdown_timezone}
         />
       </section>
@@ -274,8 +271,8 @@ export default async function Home() {
         <div className="glass-soft flex items-center gap-3 rounded-2xl px-5 py-3">
           <LockIcon className="h-5 w-5 text-sky-glow" />
           <p className="text-sm text-ink/65">
-            El registro se{" "}
-            <span className="font-semibold text-ink/85">realiza</span>, desde tu
+            El registro lo realizas{" "}
+            <span className="font-semibold text-ink/85">tú</span>, desde tu
             teléfono, ante tu compañía. No almacenamos tus datos.
           </p>
         </div>

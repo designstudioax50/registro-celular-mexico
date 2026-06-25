@@ -6,6 +6,7 @@ import { DateTime } from "luxon";
 import { createClient } from "@/lib/supabase/client";
 import { updateConfig, type ConfigPayload } from "@/app/dashboard/actions";
 import { TIMEZONES } from "@/lib/timezones";
+import { DEADLINE_GROUPS, type DeadlineColumn } from "@/lib/deadlines";
 import { type SiteConfig } from "@/lib/config";
 import QRCodePanel from "@/components/QRCodePanel";
 
@@ -17,17 +18,23 @@ type Props = {
 export default function DashboardForm({ initialConfig, userEmail }: Props) {
   const router = useRouter();
 
-  const initialLocal = useMemo(() => {
-    try {
-      return DateTime.fromMillis(
-        new Date(initialConfig.countdown_target).getTime()
-      )
-        .setZone(initialConfig.countdown_timezone)
-        .toFormat("yyyy-MM-dd'T'HH:mm");
-    } catch {
-      return "2026-06-30T23:59";
+  // Construye los 8 valores datetime-local (en la zona horaria configurada).
+  const initialLocals = useMemo(() => {
+    const tz = initialConfig.countdown_timezone;
+    const out = {} as Record<DeadlineColumn, string>;
+    for (const g of DEADLINE_GROUPS) {
+      try {
+        out[g.col] = DateTime.fromMillis(
+          new Date(initialConfig.deadlines[g.col]).getTime()
+        )
+          .setZone(tz)
+          .toFormat("yyyy-MM-dd'T'HH:mm");
+      } catch {
+        out[g.col] = "2026-12-31T23:59";
+      }
     }
-  }, [initialConfig.countdown_target, initialConfig.countdown_timezone]);
+    return out;
+  }, [initialConfig.deadlines, initialConfig.countdown_timezone]);
 
   const [form, setForm] = useState({
     hero_title: initialConfig.hero_title,
@@ -40,22 +47,19 @@ export default function DashboardForm({ initialConfig, userEmail }: Props) {
     donation_text: initialConfig.donation_text,
     benefits: initialConfig.benefits,
   });
-  const [localDateTime, setLocalDateTime] = useState(initialLocal);
+  const [deadlineLocals, setDeadlineLocals] =
+    useState<Record<DeadlineColumn, string>>(initialLocals);
   const [timezone, setTimezone] = useState(initialConfig.countdown_timezone);
 
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState<{ ok: boolean; msg: string } | null>(null);
 
-  const previewDeadline = useMemo(() => {
-    const dt = DateTime.fromISO(localDateTime, { zone: timezone }).setLocale(
-      "es"
-    );
-    if (!dt.isValid) return null;
-    return dt.toFormat("d 'de' LLLL 'de' yyyy · HH:mm 'hrs'");
-  }, [localDateTime, timezone]);
-
   function set<K extends keyof typeof form>(key: K, value: string) {
     setForm((f) => ({ ...f, [key]: value }));
+  }
+
+  function setDeadline(col: DeadlineColumn, value: string) {
+    setDeadlineLocals((d) => ({ ...d, [col]: value }));
   }
 
   async function handleSave(e: React.FormEvent) {
@@ -63,19 +67,26 @@ export default function DashboardForm({ initialConfig, userEmail }: Props) {
     setSaving(true);
     setToast(null);
 
-    const dt = DateTime.fromISO(localDateTime, { zone: timezone });
-    const utcISO = dt.isValid ? dt.toUTC().toISO() : null;
-
-    if (!utcISO) {
-      setToast({ ok: false, msg: "Revisa la fecha y hora del contador." });
-      setSaving(false);
-      return;
+    // Convertir los 8 plazos a UTC.
+    const deadlines = {} as Record<DeadlineColumn, string>;
+    for (const g of DEADLINE_GROUPS) {
+      const dt = DateTime.fromISO(deadlineLocals[g.col], { zone: timezone });
+      const iso = dt.isValid ? dt.toUTC().toISO() : null;
+      if (!iso) {
+        setToast({
+          ok: false,
+          msg: `Revisa la fecha de "Terminación ${g.badge}".`,
+        });
+        setSaving(false);
+        return;
+      }
+      deadlines[g.col] = iso;
     }
 
     const payload: ConfigPayload = {
       ...form,
-      countdown_target: utcISO,
       countdown_timezone: timezone,
+      deadlines,
     };
 
     const res = await updateConfig(payload);
@@ -168,49 +179,51 @@ export default function DashboardForm({ initialConfig, userEmail }: Props) {
           />
         </Section>
 
-        {/* Contador */}
+        {/* Contadores por terminación */}
         <Section
-          title="Contador regresivo"
-          subtitle="Elige la fecha, la hora y la zona horaria del plazo."
+          title="Contadores por terminación de número"
+          subtitle="Define la fecha y hora límite de cada grupo. La zona horaria aplica a los 8."
           delay="0.1s"
         >
-          <div className="grid gap-5 sm:grid-cols-2">
-            <Field
-              type="datetime-local"
-              label="Fecha y hora límite"
-              value={localDateTime}
-              onChange={setLocalDateTime}
-            />
-            <div className="flex flex-col gap-2">
-              <label className="text-sm font-medium text-ink/70">
-                Zona horaria
-              </label>
-              <select
-                value={timezone}
-                onChange={(e) => setTimezone(e.target.value)}
-                className="glass-input appearance-none px-4 py-3 text-sm"
-              >
-                {TIMEZONES.map((tz) => (
-                  <option
-                    key={tz.value}
-                    value={tz.value}
-                    className="bg-panel text-ink"
-                  >
-                    {tz.label}
-                  </option>
-                ))}
-              </select>
-            </div>
+          <div className="flex flex-col gap-2">
+            <label className="text-sm font-medium text-ink/70">
+              Zona horaria (para los 8 contadores)
+            </label>
+            <select
+              value={timezone}
+              onChange={(e) => setTimezone(e.target.value)}
+              className="glass-input appearance-none px-4 py-3 text-sm"
+            >
+              {TIMEZONES.map((tz) => (
+                <option
+                  key={tz.value}
+                  value={tz.value}
+                  className="bg-panel text-ink"
+                >
+                  {tz.label}
+                </option>
+              ))}
+            </select>
           </div>
-          {previewDeadline && (
-            <p className="mt-1 text-sm text-ink/50">
-              El contador terminará el{" "}
-              <span className="font-semibold text-sky-glow">
-                {previewDeadline}
-              </span>{" "}
-              (hora de la zona seleccionada).
-            </p>
-          )}
+
+          <div className="mt-2 grid gap-4 sm:grid-cols-2">
+            {DEADLINE_GROUPS.map((g) => (
+              <div key={g.col} className="flex flex-col gap-2">
+                <label className="flex items-center gap-2 text-sm font-medium text-ink/70">
+                  <span className="glass-soft inline-flex h-6 min-w-[28px] items-center justify-center rounded-md px-1.5 font-display text-xs font-bold text-sky-glow">
+                    {g.badge}
+                  </span>
+                  Terminación {g.badge}
+                </label>
+                <input
+                  type="datetime-local"
+                  value={deadlineLocals[g.col]}
+                  onChange={(e) => setDeadline(g.col, e.target.value)}
+                  className="glass-input px-4 py-3 text-sm"
+                />
+              </div>
+            ))}
+          </div>
         </Section>
 
         {/* Dirección y mapa */}
