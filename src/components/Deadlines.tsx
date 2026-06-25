@@ -30,6 +30,26 @@ function getRemaining(targetMs: number): Remaining {
   };
 }
 
+/**
+ * Rampa de color: del azul cielo suave (tarjeta 0) al azul intenso (última),
+ * como un degradado de intensidad a lo largo de los 8 contadores.
+ */
+function cardTint(i: number, n: number) {
+  const t = n > 1 ? i / (n - 1) : 0;
+  const start = [125, 211, 252]; // azul cielo claro (#7dd3fc)
+  const end = [29, 119, 235]; // azul intenso
+  const r = Math.round(start[0] + (end[0] - start[0]) * t);
+  const g = Math.round(start[1] + (end[1] - start[1]) * t);
+  const b = Math.round(start[2] + (end[2] - start[2]) * t);
+  const aTop = (0.1 + (0.32 - 0.1) * t).toFixed(3);
+  const aBot = (0.03 + (0.14 - 0.03) * t).toFixed(3);
+  const aBorder = (0.3 + (0.65 - 0.3) * t).toFixed(3);
+  return {
+    background: `linear-gradient(160deg, rgba(${r},${g},${b},${aTop}) 0%, rgba(${r},${g},${b},${aBot}) 100%)`,
+    borderColor: `rgba(${r},${g},${b},${aBorder})`,
+  };
+}
+
 export default function Deadlines({ deadlines, timezone }: Props) {
   const [mounted, setMounted] = useState(false);
   // Se actualiza cada segundo; "tick" fuerza el re-render de todas las tarjetas.
@@ -64,7 +84,10 @@ export default function Deadlines({ deadlines, timezone }: Props) {
           <div
             key={g.col}
             className="glass animate-fade-up flex flex-col rounded-2xl p-5"
-            style={{ animationDelay: `${i * 0.05}s` }}
+            style={{
+              animationDelay: `${i * 0.05}s`,
+              ...cardTint(i, DEADLINE_GROUPS.length),
+            }}
           >
             {/* Cabecera: terminación */}
             <div className="flex items-center justify-between">
