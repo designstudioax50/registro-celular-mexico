@@ -102,7 +102,36 @@ export default async function Home() {
         <Deadlines
           deadlines={config.deadlines}
           timezone={config.countdown_timezone}
+          colorStart={config.color_start}
+          colorMid={config.color_mid}
+          colorEnd={config.color_end}
         />
+
+        {/* Nota informativa: periodo de gracia de 72 horas */}
+        <div className="glass-soft mt-6 flex items-start gap-3 rounded-2xl px-5 py-4">
+          <svg
+            viewBox="0 0 24 24"
+            className="mt-0.5 h-5 w-5 shrink-0 text-amber-300"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <circle cx="12" cy="12" r="9" />
+            <path d="M12 8h.01M11 12h1v4h1" />
+          </svg>
+          <p className="text-[13px] leading-relaxed text-ink/65 sm:text-sm">
+            Si no realizas el trámite, tu compañía suspenderá el servicio en las{" "}
+            <span className="font-semibold text-ink/85">
+              72 horas (3 días)
+            </span>{" "}
+            posteriores a tu fecha límite. Durante ese tiempo solo podrás hacer
+            llamadas de emergencia, recibir alertas sísmicas y comunicarte con
+            atención ciudadana o con tu operador, hasta que concluyas el
+            registro.
+          </p>
+        </div>
       </section>
 
       {/* ===== Banner: te ayudamos ===== */}

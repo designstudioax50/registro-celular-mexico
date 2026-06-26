@@ -149,6 +149,10 @@ registro-celular/
   `src/app/page.tsx`.
 - **Beneficios:** ahora se editan **desde el panel** (uno por línea). Ya no
   necesitas tocar código.
+- **Colores de los contadores:** se eligen **desde el panel** con un selector de
+  color (con gotero). El fondo de cada contador cambia de color según se acerca
+  su fecha (azul → verde → rojo) y, al vencer, suma 3 días (72 h de gracia)
+  avisando antes de la suspensión.
 - **Requisitos:** son texto fijo dentro de `src/app/page.tsx`, en la tarjeta
   `InfoCard` de "Requisitos". Cámbialos a tu gusto.
 - **Imagen del header:** reemplaza el archivo `public/header-bg.jpg` por la tuya
@@ -163,9 +167,9 @@ registro-celular/
 
 Si ya tenías la base de datos creada, corre **una vez** el archivo
 `supabase/migration.sql` en *Supabase > SQL Editor*. Agrega (de forma segura) la
-columna de Beneficios y los 8 contadores por terminación. Es seguro correrlo
-aunque ya hayas aplicado migraciones antes. (Si es instalación nueva con
-`schema.sql`, ya viene todo incluido.)
+columna de Beneficios, los 8 contadores por terminación y los 3 colores del
+degradado. Es seguro correrlo aunque ya hayas aplicado migraciones antes. (Si es
+instalación nueva con `schema.sql`, ya viene todo incluido.)
 
 ---
 

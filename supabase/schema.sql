@@ -27,6 +27,9 @@ create table if not exists public.site_config (
   hours_text         text not null default 'Lunes a sábado, 9:00 a 18:00 hrs.',
   donation_text      text not null default 'El registro es totalmente gratuito. La aportación es voluntaria (10, 15 o 20 MXN) por el uso del equipo e internet, nunca por el registro.',
   benefits           text not null default E'Proceso rápido\nSin filas\nAtención personalizada\nComprobante de registro',
+  color_start        text not null default '#38bdf8',
+  color_mid          text not null default '#22c55e',
+  color_end          text not null default '#ef4444',
   updated_at         timestamptz not null default now(),
   constraint site_config_single_row check (id = 1)
 );

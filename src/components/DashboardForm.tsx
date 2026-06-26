@@ -46,6 +46,9 @@ export default function DashboardForm({ initialConfig, userEmail }: Props) {
     hours_text: initialConfig.hours_text,
     donation_text: initialConfig.donation_text,
     benefits: initialConfig.benefits,
+    color_start: initialConfig.color_start,
+    color_mid: initialConfig.color_mid,
+    color_end: initialConfig.color_end,
   });
   const [deadlineLocals, setDeadlineLocals] =
     useState<Record<DeadlineColumn, string>>(initialLocals);
@@ -226,6 +229,43 @@ export default function DashboardForm({ initialConfig, userEmail }: Props) {
           </div>
         </Section>
 
+        {/* Colores de los contadores */}
+        <Section
+          title="Colores de los contadores"
+          subtitle="El fondo de cada contador va cambiando de color según se acerca su fecha. Elige los 3 colores del degradado."
+          delay="0.13s"
+        >
+          {/* Vista previa del degradado */}
+          <div
+            className="h-10 w-full rounded-xl border border-white/10"
+            style={{
+              background: `linear-gradient(90deg, ${form.color_start} 0%, ${form.color_mid} 50%, ${form.color_end} 100%)`,
+            }}
+          />
+          <div className="grid gap-4 sm:grid-cols-3">
+            <ColorField
+              label="1 · Lejos (inicio)"
+              value={form.color_start}
+              onChange={(v) => set("color_start", v)}
+            />
+            <ColorField
+              label="2 · A medio camino"
+              value={form.color_mid}
+              onChange={(v) => set("color_mid", v)}
+            />
+            <ColorField
+              label="3 · Fecha límite (final)"
+              value={form.color_end}
+              onChange={(v) => set("color_end", v)}
+            />
+          </div>
+          <p className="-mt-1 text-xs text-ink/40">
+            Sugerencia: del azul (tranquilo) al rojo (urgente). Al pasar la fecha,
+            el contador suma 3 días automáticamente (las 72 h de gracia) y avisa
+            antes de la suspensión.
+          </p>
+        </Section>
+
         {/* Dirección y mapa */}
         <Section
           title="Dirección y botón de ubicación"
@@ -395,6 +435,38 @@ function TextareaField({
         rows={rows}
         className="glass-input resize-none px-4 py-3 text-sm leading-relaxed"
       />
+    </div>
+  );
+}
+
+function ColorField({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+}) {
+  return (
+    <div className="flex flex-col gap-2">
+      <label className="text-sm font-medium text-ink/70">{label}</label>
+      <div className="flex items-center gap-2">
+        <input
+          type="color"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          aria-label={label}
+          className="h-11 w-12 shrink-0 cursor-pointer rounded-lg border border-white/10 bg-transparent p-1"
+        />
+        <input
+          type="text"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          spellCheck={false}
+          className="glass-input w-full px-3 py-2.5 text-sm uppercase"
+        />
+      </div>
     </div>
   );
 }

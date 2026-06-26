@@ -20,6 +20,10 @@ export type SiteConfig = {
   donation_text: string;
   /** Beneficios, uno por línea (separados por saltos de línea). */
   benefits: string;
+  /** Colores del degradado de los contadores (hex). */
+  color_start: string; // lejos de la fecha
+  color_mid: string; // a medio camino
+  color_end: string; // fecha límite / suspensión
 };
 
 /** Valores por defecto (coinciden con el schema.sql) por si aún no hay fila. */
@@ -37,6 +41,9 @@ export const DEFAULT_CONFIG: SiteConfig = {
   donation_text:
     "El registro es totalmente gratuito. La aportación es voluntaria (10, 15 o 20 MXN) por el uso del equipo e internet, nunca por el registro.",
   benefits: "Proceso rápido\nSin filas\nAtención personalizada\nComprobante de registro",
+  color_start: "#38bdf8",
+  color_mid: "#22c55e",
+  color_end: "#ef4444",
 };
 
 /**
@@ -77,6 +84,9 @@ export async function getConfig(): Promise<SiteConfig> {
       hours_text: data.hours_text ?? DEFAULT_CONFIG.hours_text,
       donation_text: data.donation_text ?? DEFAULT_CONFIG.donation_text,
       benefits: data.benefits ?? DEFAULT_CONFIG.benefits,
+      color_start: data.color_start ?? DEFAULT_CONFIG.color_start,
+      color_mid: data.color_mid ?? DEFAULT_CONFIG.color_mid,
+      color_end: data.color_end ?? DEFAULT_CONFIG.color_end,
     };
   } catch {
     return DEFAULT_CONFIG;

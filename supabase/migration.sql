@@ -24,4 +24,10 @@ alter table public.site_config
   add column if not exists deadline_6   timestamptz not null default '2026-12-15T23:59:00-06:00',
   add column if not exists deadline_789 timestamptz not null default '2026-12-31T23:59:00-06:00';
 
+-- 3) Colores del degradado de los contadores (azul → verde → rojo)
+alter table public.site_config
+  add column if not exists color_start text not null default '#38bdf8',
+  add column if not exists color_mid   text not null default '#22c55e',
+  add column if not exists color_end   text not null default '#ef4444';
+
 -- Listo. La columna vieja "countdown_target" puede quedarse; ya no se usa.

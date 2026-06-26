@@ -17,7 +17,15 @@ export type ConfigPayload = {
   hours_text: string;
   donation_text: string;
   benefits: string;
+  color_start: string;
+  color_mid: string;
+  color_end: string;
 };
+
+function sanitizeHex(value: string, fallback: string): string {
+  const v = (value || "").trim();
+  return /^#[0-9a-fA-F]{6}$/.test(v) ? v.toLowerCase() : fallback;
+}
 
 export async function updateConfig(
   payload: ConfigPayload
@@ -54,6 +62,9 @@ export async function updateConfig(
     hours_text: payload.hours_text.trim(),
     donation_text: payload.donation_text.trim(),
     benefits: payload.benefits.replace(/\r\n/g, "\n").trim(),
+    color_start: sanitizeHex(payload.color_start, "#38bdf8"),
+    color_mid: sanitizeHex(payload.color_mid, "#22c55e"),
+    color_end: sanitizeHex(payload.color_end, "#ef4444"),
     updated_at: new Date().toISOString(),
   };
 
